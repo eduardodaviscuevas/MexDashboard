@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mexico economy monitor: industry, peso and rates</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <h1>Mexico economy monitor</h1>
+      <p class="question">Is Mexico's industrial / nearshoring story holding up under peso and interest-rate pressure?</p>
+    </div>
+    <div id="refresh-box" class="refresh-box" aria-live="polite">Loading refresh status…</div>
+  </header>
+
+  <nav class="panel-nav">
+    <a href="#panel-A">A. Core macro</a>
+    <a href="#panel-B">B. Industrial real estate proxies</a>
+    <a href="#panel-C">C. Broker market data</a>
+  </nav>
+
+  <main>
+    <section id="panel-A" class="panel">
+      <h2>A. Core macro indicators <span class="tag tag-official">Official sources, refreshed automatically</span></h2>
+      <div class="grid" id="charts-A"></div>
+    </section>
+
+    <section id="panel-B" class="panel">
+      <h2>B. Industrial real estate: demand and supply proxies <span class="tag tag-official">Official sources, refreshed automatically</span></h2>
+      <div class="grid" id="charts-B"></div>
+    </section>
+
+    <section id="panel-C" class="panel panel-manual">
+      <h2>C. Market data (broker reports, manual quarterly update)</h2>
+      <p class="manual-banner"><strong>Non-official, broker survey, manually updated.</strong>
+        These figures are typed in by hand from public broker reports. The daily automatic refresh does <em>not</em> touch them.
+        Broker market definitions differ, so only one broker is used.</p>
+      <div id="manual-age" class="manual-age"></div>
+      <div class="grid" id="charts-C"></div>
+      <div id="manual-table"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Data: Banco de México SIE API, INEGI Banco de Indicadores API (BIE), U.S. BTS Border Crossing Entry Data; broker data entered manually.
+      Every chart links to its official source page. "Latest observation" is the most recent period in the data; "Last successful refresh" is when the
+      automated job last fetched <em>every</em> series without error. Static site; data in <a href="data/status.json">data/status.json</a> and <code>data/*.csv</code>.</p>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

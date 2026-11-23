@@ -1,0 +1,365 @@
+# =============================================================================
+# Mexico economy dashboard: single source of truth.
+#
+# Adding a series = add one entry under `series:` (and, if it should share a
+# chart with other series, point its `chart:` at an entry under `charts:`).
+# No Python or JavaScript changes are needed.
+#
+# Series fields
+#   id                 unique key; also the CSV file name (data/<id>.csv)
+#   name               display name (legend label)
+#   panel              A | B  (C is the manual broker panel, see data/manual/)
+#   chart              id of a chart under `charts:` (series sharing a chart are drawn together)
+#   source_org         organisation that publishes the series
+#   source_series_id   the series/indicator ID in that organisation's catalog
+#   api                which fetcher to use: banxico | inegi | bts
+#   endpoint           API endpoint (tokens are injected at run time, never stored here)
+#   params             fetcher-specific options (e.g. BTS port filter)
+#   units              units of the raw `value` column, exactly as the source states them
+#   frequency          daily | monthly | event (event = changes only on decision dates)
+#   seasonal_adjustment  "Not seasonally adjusted (original series)" etc.
+#   transform          none | yoy_pct   (see src/transforms.py)
+#   plot               value | derived  (which CSV column the chart draws)
+#   display_divisor    optional: divide the plotted column by this for display
+#   display_units      units shown on the chart axis after any transform/divisor
+#   transform_note     plain-language note shown under the chart
+#   sample_start       first date requested (YYYY-MM-DD)
+#   stale_after_days   STALE badge if (today - latest observation date) exceeds this. Set to the
+#                      normal gap until the NEXT observation is published (period length +
+#                      publication lag) plus ~10 days of grace. Monthly dates are the 1st of the month.
+#   source_url         official page a reader can use to check the numbers
+# =============================================================================
+
+defaults:
+  sample_start: "2014-01-01"   # Jan 2014 so y/y changes start in Jan 2015
+
+charts:
+  # ---------------- Panel A: core macro ----------------
+  fx:
+    panel: A
+    title: "USD/MXN exchange rate (Banxico FIX)"
+    note: "Quote convention: Mexican pesos per 1 US dollar. An increase means the peso DEPRECIATED."
+  policy_rate:
+    panel: A
+    title: "Banxico policy rate (overnight interbank target)"
+    shape: step
+  inflation:
+    panel: A
+    title: "CPI inflation: headline and core (INPC)"
+    reference_line: 3.0
+    reference_label: "Banxico target 3%"
+  igae:
+    panel: A
+    title: "Economic activity (IGAE)"
+    zero_line: true
+  manufacturing:
+    panel: A
+    title: "Manufacturing production (Indicador Mensual de la Actividad Industrial)"
+    zero_line: true
+  mfg_exports:
+    panel: A
+    title: "Manufacturing exports"
+  trade_balance:
+    panel: A
+    title: "Merchandise trade balance"
+    shape: bar
+    zero_line: true
+  unemployment:
+    panel: A
+    title: "Unemployment rate (ENOE)"
+  remittances:
+    panel: A
+    title: "Remittance inflows"
+  # ---------------- Panel B: industrial real estate proxies ----------------
+  construction:
+    panel: B
+    title: "Construction output (ENEC, total value of production, real index)"
+    zero_line: true
+  trucks_ports:
+    panel: B
+    title: "Northbound truck crossings into the U.S. at major Mexico-border ports"
+  trucks_total:
+    panel: B
+    title: "Total U.S.-Mexico border truck crossings, year over year"
+    zero_line: true
+
+series:
+  # ======================= PANEL A =======================
+  - id: usdmxn_fix
+    name: "USD/MXN FIX"
+    panel: A
+    chart: fx
+    source_org: "Banco de México (SIE)"
+    source_series_id: "SF43718"
+    api: banxico
+    endpoint: "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF43718/datos/{start}/{end}"
+    units: "Pesos per US dollar"
+    frequency: daily
+    seasonal_adjustment: "Not applicable"
+    transform: none
+    plot: value
+    display_units: "MXN per 1 USD"
+    transform_note: "No transformation. FIX rate published by Banxico on each banking day (date of determination)."
+    stale_after_days: 7
+    source_url: "https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=6&accion=consultarCuadro&idCuadro=CF102&locale=es"
+
+  - id: policy_rate
+    name: "Target for the overnight interbank rate"
+    panel: A
+    chart: policy_rate
+    source_org: "Banco de México (SIE)"
+    source_series_id: "SF61745"
+    api: banxico
+    endpoint: "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF61745/datos/{start}/{end}"
+    units: "Percent per year"
+    frequency: event
+    seasonal_adjustment: "Not applicable"
+    transform: none
+    plot: value
+    display_units: "% per year"
+    transform_note: "No transformation. Banxico publishes the target daily; it changes only on monetary-policy decision dates, so it is drawn as a step line."
+    stale_after_days: 7
+    source_url: "https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadro&idCuadro=CF101&locale=es"
+
+  - id: inpc_headline
+    name: "Headline CPI"
+    panel: A
+    chart: inflation
+    source_org: "INEGI (BIE)"
+    source_series_id: "910392"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/910392/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Index, base 2nd half of July 2018 = 100 (INPC, 2024 basket and weights update)"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted"
+    transform: yoy_pct
+    plot: derived
+    display_units: "% change, year over year"
+    transform_note: "Year-over-year % change computed from the monthly INPC index (base 2nd half of July 2018 = 100): 100 x (I_t / I_t-12 - 1)."
+    stale_after_days: 80
+    source_url: "https://www.inegi.org.mx/programas/inpc/2018/"
+
+  - id: inpc_core
+    name: "Core CPI (subyacente)"
+    panel: A
+    chart: inflation
+    source_org: "INEGI (BIE)"
+    source_series_id: "910393"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/910393/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Index, base 2nd half of July 2018 = 100 (INPC core, 2024 basket and weights update)"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted"
+    transform: yoy_pct
+    plot: derived
+    display_units: "% change, year over year"
+    transform_note: "Year-over-year % change computed from the monthly core INPC index (base 2nd half of July 2018 = 100)."
+    stale_after_days: 80
+    source_url: "https://www.inegi.org.mx/programas/inpc/2018/"
+
+  - id: igae
+    name: "IGAE, total"
+    panel: A
+    chart: igae
+    source_org: "INEGI (BIE)"
+    source_series_id: "737121"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/737121/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Volume index, 2018 = 100"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted (original series)"
+    transform: yoy_pct
+    plot: derived
+    display_units: "% change, year over year"
+    transform_note: "Year-over-year % change of the original (not seasonally adjusted) IGAE volume index, 2018 = 100. Y/y on the original series removes most seasonality but not calendar/Easter effects."
+    stale_after_days: 125
+    source_url: "https://www.inegi.org.mx/programas/igae/2018/"
+
+  - id: manufacturing_ip
+    name: "Manufacturing (SCIAN 31-33)"
+    panel: A
+    chart: manufacturing
+    source_org: "INEGI (BIE)"
+    source_series_id: "736418"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/736418/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Volume index, 2018 = 100"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted (original series)"
+    transform: yoy_pct
+    plot: derived
+    display_units: "% change, year over year"
+    transform_note: "Year-over-year % change of the original (not seasonally adjusted) manufacturing volume index, 2018 = 100."
+    stale_after_days: 115
+    source_url: "https://www.inegi.org.mx/programas/aim/2018/"
+
+  - id: mfg_exports
+    name: "Manufacturing exports (incl. maquila)"
+    panel: A
+    chart: mfg_exports
+    source_org: "INEGI (BIE); Balanza Comercial de Mercancías de México (SAT, SE, Banxico, INEGI)"
+    source_series_id: "133023"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/133023/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Thousands of US dollars"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted (original series)"
+    transform: none
+    plot: value
+    display_divisor: 1000000
+    display_units: "Billions of US dollars (current)"
+    transform_note: "Source values are in thousands of US dollars; divided by 1,000,000 for display in billions. Not seasonally adjusted, current dollars."
+    stale_after_days: 100
+    source_url: "https://www.inegi.org.mx/programas/comext/"
+
+  - id: trade_balance
+    name: "Merchandise trade balance (FOB)"
+    panel: A
+    chart: trade_balance
+    source_org: "INEGI (BIE); Balanza Comercial de Mercancías de México (SAT, SE, Banxico, INEGI)"
+    source_series_id: "33229"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/33229/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Millions of US dollars"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted (original series)"
+    transform: none
+    plot: value
+    display_units: "Millions of US dollars (current)"
+    transform_note: "No transformation. Exports minus imports, FOB, not seasonally adjusted, current dollars."
+    stale_after_days: 100
+    source_url: "https://www.inegi.org.mx/programas/comext/"
+
+  - id: unemployment
+    name: "Unemployment rate, national"
+    panel: A
+    chart: unemployment
+    source_org: "INEGI (BIE), ENOE"
+    source_series_id: "444603"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/444603/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Percent of the economically active population (15 years and older)"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted (original series)"
+    transform: none
+    plot: value
+    display_units: "% of labour force"
+    transform_note: "No transformation. Monthly ENOE results; April-June 2020 come from the telephone survey (ETOE), so the pandemic months are not strictly comparable."
+    stale_after_days: 100
+    source_url: "https://www.inegi.org.mx/programas/enoe/15ymas/"
+
+  - id: remittances
+    name: "Remittance inflows, total"
+    panel: A
+    chart: remittances
+    source_org: "Banco de México (SIE)"
+    source_series_id: "SE27803"
+    api: banxico
+    endpoint: "https://www.banxico.org.mx/SieAPIRest/service/v1/series/SE27803/datos/{start}/{end}"
+    units: "Millions of US dollars"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted (original series)"
+    transform: none
+    plot: value
+    display_units: "Millions of US dollars per month"
+    transform_note: "No transformation. Monthly flow, current dollars, not seasonally adjusted."
+    stale_after_days: 100
+    source_url: "https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=1&accion=consultarCuadro&idCuadro=CE81&locale=es"
+
+  # ======================= PANEL B =======================
+  - id: enec_production
+    name: "ENEC value of production, total (real index)"
+    panel: B
+    chart: construction
+    source_org: "INEGI (BIE), Encuesta Nacional de Empresas Constructoras (ENEC)"
+    source_series_id: "720326"
+    api: inegi
+    endpoint: "https://www.inegi.org.mx/app/api/indicadores/desarrolladores/jsonxml/INDICATOR/720326/es/00/false/BIE-BISE/2.0/{token}?type=json"
+    units: "Index, 2018 = 100"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted (original series)"
+    transform: yoy_pct
+    plot: derived
+    display_units: "% change, year over year"
+    transform_note: "Year-over-year % change of the ENEC total value-of-production index (2018 = 100, all types of work, public and private contracting). Not split by type of work."
+    stale_after_days: 125
+    source_url: "https://www.inegi.org.mx/programas/enec/2018/"
+
+  - id: trucks_laredo
+    name: "Laredo, TX (Nuevo Laredo / Monterrey corridor)"
+    panel: B
+    chart: trucks_ports
+    source_org: "U.S. Bureau of Transportation Statistics, Border Crossing Entry Data"
+    source_series_id: "keg4-3bc2 (measure=Trucks, port_name=Laredo)"
+    api: bts
+    endpoint: "https://data.bts.gov/resource/keg4-3bc2.json"
+    params: {measure: "Trucks", border: "US-Mexico Border", port_name: "Laredo"}
+    units: "Incoming truck crossings per month"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted"
+    transform: none
+    plot: value
+    display_divisor: 1000
+    display_units: "Thousands of trucks per month"
+    transform_note: "Inbound (Mexico to U.S.) truck crossings counted by CBP at the port; divided by 1,000 for display. Counts crossings, not loaded vs empty trucks."
+    stale_after_days: 120
+    source_url: "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2"
+
+  - id: trucks_el_paso
+    name: "El Paso + Ysleta, TX (Ciudad Juárez)"
+    panel: B
+    chart: trucks_ports
+    source_org: "U.S. Bureau of Transportation Statistics, Border Crossing Entry Data"
+    source_series_id: "keg4-3bc2 (measure=Trucks, port_name in [El Paso 2402, Ysleta 2401], summed)"
+    api: bts
+    endpoint: "https://data.bts.gov/resource/keg4-3bc2.json"
+    params: {measure: "Trucks", border: "US-Mexico Border", port_name: ["El Paso", "Ysleta"]}
+    units: "Incoming truck crossings per month"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted"
+    transform: none
+    plot: value
+    display_divisor: 1000
+    display_units: "Thousands of trucks per month"
+    transform_note: "Sum of El Paso (2402) and Ysleta (2401) ports. BTS reports Ysleta separately only from March 2020; before that its traffic is inside El Paso, so the two are summed for a consistent Ciudad Juárez series. Divided by 1,000 for display."
+    stale_after_days: 120
+    source_url: "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2"
+
+  - id: trucks_otay_mesa
+    name: "Otay Mesa, CA (Tijuana)"
+    panel: B
+    chart: trucks_ports
+    source_org: "U.S. Bureau of Transportation Statistics, Border Crossing Entry Data"
+    source_series_id: "keg4-3bc2 (measure=Trucks, port_name=Otay Mesa)"
+    api: bts
+    endpoint: "https://data.bts.gov/resource/keg4-3bc2.json"
+    params: {measure: "Trucks", border: "US-Mexico Border", port_name: "Otay Mesa"}
+    units: "Incoming truck crossings per month"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted"
+    transform: none
+    plot: value
+    display_divisor: 1000
+    display_units: "Thousands of trucks per month"
+    transform_note: "Inbound truck crossings at Otay Mesa (main commercial crossing for Tijuana); divided by 1,000 for display."
+    stale_after_days: 120
+    source_url: "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2"
+
+  - id: trucks_border_total
+    name: "All U.S.-Mexico border ports"
+    panel: B
+    chart: trucks_total
+    source_org: "U.S. Bureau of Transportation Statistics, Border Crossing Entry Data"
+    source_series_id: "keg4-3bc2 (measure=Trucks, border=US-Mexico Border, sum of all ports)"
+    api: bts
+    endpoint: "https://data.bts.gov/resource/keg4-3bc2.json"
+    params: {measure: "Trucks", border: "US-Mexico Border"}
+    units: "Incoming truck crossings per month (sum of all ports)"
+    frequency: monthly
+    seasonal_adjustment: "Not seasonally adjusted"
+    transform: yoy_pct
+    plot: derived
+    display_units: "% change, year over year"
+    transform_note: "Monthly inbound truck crossings summed over all U.S.-Mexico border ports, then year-over-year % change."
+    stale_after_days: 120
+    source_url: "https://data.bts.gov/Research-and-Statistics/Border-Crossing-Entry-Data/keg4-3bc2"
