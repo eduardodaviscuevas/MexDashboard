@@ -174,13 +174,15 @@ def append_run_log() -> None:
     LOG_FILE.write_text("".join(sep + "\n" + r for r in runs[-LOG_KEEP_RUNS:]), encoding="utf-8", newline="\n")
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--only", help="comma-separated series ids to refresh")
     ap.add_argument("--no-log-file", action="store_true", help="do not append to verify/refresh_log.txt")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
+    _log_lines.clear()  # main() may be called repeatedly from the Streamlit app
 
-    sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     load_dotenv(ROOT / ".env")
     cfg = load_config()
     status = load_status()
@@ -192,7 +194,8 @@ def main() -> int:
         selected = [s for s in selected if s["id"] in wanted]
 
     started = utc_now()
-    where = "GitHub Actions run %s" % os.environ["GITHUB_RUN_ID"] if os.environ.get("GITHUB_RUN_ID") else "local"
+    where = os.environ.get("REFRESH_WHERE") or (
+        "GitHub Actions run %s" % os.environ["GITHUB_RUN_ID"] if os.environ.get("GITHUB_RUN_ID") else "local")
     log(f"Refresh started {started} ({where}); {len(selected)} series")
 
     ok = 0
