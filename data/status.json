@@ -1,8 +1,8 @@
 {
-  "last_successful_refresh_utc": "2026-11-23T19:17:19Z",
+  "last_successful_refresh_utc": "2026-11-25T02:50:51Z",
   "series": {
     "usdmxn_fix": {
-      "last_fetch_attempt_utc": "2026-11-23T19:16:55Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:34Z",
       "meta": {
         "name": "USD/MXN FIX",
         "panel": "A",
@@ -23,15 +23,15 @@
       },
       "status": "ok",
       "error": null,
-      "latest_observation_date": "2026-11-23",
-      "latest_value": 19.1648,
+      "latest_observation_date": "2026-11-24",
+      "latest_value": 19.3668,
       "derived_column": null,
-      "n_obs": 3241,
+      "n_obs": 3242,
       "first_observation_date": "2014-01-02",
-      "last_successful_fetch_utc": "2026-11-23T19:16:55Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:34Z"
     },
     "policy_rate": {
-      "last_fetch_attempt_utc": "2026-11-23T19:16:56Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:34Z",
       "meta": {
         "name": "Target for the overnight interbank rate",
         "panel": "A",
@@ -52,15 +52,15 @@
       },
       "status": "ok",
       "error": null,
-      "latest_observation_date": "2026-11-23",
+      "latest_observation_date": "2026-11-25",
       "latest_value": 6.25,
       "derived_column": null,
-      "n_obs": 4697,
+      "n_obs": 4699,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:16:56Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:34Z"
     },
     "inpc_headline": {
-      "last_fetch_attempt_utc": "2026-11-23T19:16:56Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:35Z",
       "meta": {
         "name": "Headline CPI",
         "panel": "A",
@@ -86,10 +86,10 @@
       "derived_column": "yoy_pct",
       "n_obs": 154,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:16:56Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:35Z"
     },
     "inpc_core": {
-      "last_fetch_attempt_utc": "2026-11-23T19:16:59Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:37Z",
       "meta": {
         "name": "Core CPI (subyacente)",
         "panel": "A",
@@ -115,10 +115,10 @@
       "derived_column": "yoy_pct",
       "n_obs": 154,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:16:59Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:37Z"
     },
     "igae": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:01Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:39Z",
       "meta": {
         "name": "IGAE, total",
         "panel": "A",
@@ -144,10 +144,10 @@
       "derived_column": "yoy_pct",
       "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:01Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:39Z"
     },
     "manufacturing_ip": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:05Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:40Z",
       "meta": {
         "name": "Manufacturing (SCIAN 31-33)",
         "panel": "A",
@@ -173,10 +173,10 @@
       "derived_column": "yoy_pct",
       "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:05Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:40Z"
     },
     "mfg_exports": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:07Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:42Z",
       "meta": {
         "name": "Manufacturing exports (incl. maquila)",
         "panel": "A",
@@ -202,10 +202,10 @@
       "derived_column": null,
       "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:07Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:42Z"
     },
     "trade_balance": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:08Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:43Z",
       "meta": {
         "name": "Merchandise trade balance (FOB)",
         "panel": "A",
@@ -231,10 +231,10 @@
       "derived_column": null,
       "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:08Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:43Z"
     },
     "unemployment": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:10Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:44Z",
       "meta": {
         "name": "Unemployment rate, national",
         "panel": "A",
@@ -260,10 +260,10 @@
       "derived_column": null,
       "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:10Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:44Z"
     },
     "remittances": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:12Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:47Z",
       "meta": {
         "name": "Remittance inflows, total",
         "panel": "A",
@@ -289,10 +289,10 @@
       "derived_column": null,
       "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:12Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:47Z"
     },
     "enec_production": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:12Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:47Z",
       "meta": {
         "name": "ENEC value of production, total (real index)",
         "panel": "B",
@@ -313,15 +313,15 @@
       },
       "status": "ok",
       "error": null,
-      "latest_observation_date": "2026-08-01",
-      "latest_value": 87.95150369,
+      "latest_observation_date": "2026-09-01",
+      "latest_value": 92.39875168,
       "derived_column": "yoy_pct",
-      "n_obs": 152,
+      "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:12Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:47Z"
     },
     "trucks_laredo": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:14Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:49Z",
       "meta": {
         "name": "Laredo, TX (Nuevo Laredo / Monterrey corridor)",
         "panel": "B",
@@ -347,10 +347,10 @@
       "derived_column": null,
       "n_obs": 154,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:14Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:49Z"
     },
     "trucks_el_paso": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:15Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:49Z",
       "meta": {
         "name": "El Paso + Ysleta, TX (Ciudad Juárez)",
         "panel": "B",
@@ -376,10 +376,10 @@
       "derived_column": null,
       "n_obs": 154,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:15Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:49Z"
     },
     "trucks_otay_mesa": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:16Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:50Z",
       "meta": {
         "name": "Otay Mesa, CA (Tijuana)",
         "panel": "B",
@@ -405,10 +405,10 @@
       "derived_column": null,
       "n_obs": 153,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:16Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:50Z"
     },
     "trucks_border_total": {
-      "last_fetch_attempt_utc": "2026-11-23T19:17:18Z",
+      "last_fetch_attempt_utc": "2026-11-25T02:50:50Z",
       "meta": {
         "name": "All U.S.-Mexico border ports",
         "panel": "B",
@@ -434,7 +434,7 @@
       "derived_column": "yoy_pct",
       "n_obs": 154,
       "first_observation_date": "2014-01-01",
-      "last_successful_fetch_utc": "2026-11-23T19:17:18Z"
+      "last_successful_fetch_utc": "2026-11-25T02:50:50Z"
     }
   },
   "charts": {
@@ -498,9 +498,9 @@
     }
   },
   "last_run": {
-    "started_utc": "2026-11-23T19:16:55Z",
-    "finished_utc": "2026-11-23T19:17:19Z",
-    "where": "local",
+    "started_utc": "2026-11-25T02:50:34Z",
+    "finished_utc": "2026-11-25T02:50:51Z",
+    "where": "GitHub Actions run 45535749926",
     "status": "ok",
     "series_ok": 15,
     "series_error": 0,
