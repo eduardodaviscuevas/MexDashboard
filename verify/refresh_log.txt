@@ -74,3 +74,22 @@ Refresh started 2026-11-27T01:58:41Z (GitHub Actions run 45925572084); 15 series
   [OK]    trucks_border_total    latest=2026-10-01 n=154   no new data
 Refresh finished 2026-11-27T01:58:57Z: status=ok, ok=15, errors=0; last_successful_refresh_utc=2026-11-27T01:58:57Z
 Manual panel C (broker market data) was NOT refreshed (manual quarterly update).
+==============================================================================
+Refresh started 2026-11-28T01:42:48Z (GitHub Actions run 46094454273); 15 series
+  [OK]    usdmxn_fix             latest=2026-11-27 n=3245  1 new obs, 0 revised obs
+  [OK]    policy_rate            latest=2026-11-28 n=4702  1 new obs, 0 revised obs
+  [OK]    inpc_headline          latest=2026-10-01 n=154   no new data
+  [OK]    inpc_core              latest=2026-10-01 n=154   no new data
+  [OK]    igae                   latest=2026-09-01 n=153   no new data
+  [OK]    manufacturing_ip       latest=2026-09-01 n=153   no new data
+  [OK]    mfg_exports            latest=2026-09-01 n=153   no new data
+  [OK]    trade_balance          latest=2026-10-01 n=154   1 new obs, 0 revised obs
+  [OK]    unemployment           latest=2026-10-01 n=154   no new data
+  [OK]    remittances            latest=2026-09-01 n=153   no new data
+  [OK]    enec_production        latest=2026-09-01 n=153   no new data
+  [OK]    trucks_laredo          latest=2026-10-01 n=154   no new data
+  [OK]    trucks_el_paso         latest=2026-10-01 n=154   no new data
+  [OK]    trucks_otay_mesa       latest=2026-10-01 n=153   no new data
+  [OK]    trucks_border_total    latest=2026-10-01 n=154   no new data
+Refresh finished 2026-11-28T01:43:01Z: status=ok, ok=15, errors=0; last_successful_refresh_utc=2026-11-28T01:43:01Z
+Manual panel C (broker market data) was NOT refreshed (manual quarterly update).
